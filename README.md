@@ -1,2 +1,2 @@
-# datepicker
+# FooPicker
 JavaScript date picker plugin
