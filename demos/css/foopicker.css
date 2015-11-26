@@ -41,6 +41,11 @@
   background: #e4e4e4;
 }
 
+.foopicker__day--selected {
+  background: #3498db;
+  color: #fff;
+}
+
 .foopicker__week {
   font-size: 1em;
   font-weight: 600;

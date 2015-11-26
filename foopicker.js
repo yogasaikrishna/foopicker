@@ -6,10 +6,15 @@
  * URL: https://github.com/yogasaikrishna/foopicker
  */
 
-(function ($this) {
+var FooPicker = (function () {
   'use strict';
 
-  $this.FooPicker = function() {
+  var hasEventListener = window.addEventListener;
+  var weeks = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+  function FooPicker() {
+    var _self = this;
+    var _id;
 
     var defaults = {
       className: 'foopicker',
@@ -17,41 +22,121 @@
     };
 
     if (arguments[0] && typeof arguments[0] === "object") {
-      this.options = extendOptions(defaults, arguments[0]);
+      _self.options = extendOptions(defaults, arguments[0]);
+      _id = _self.options.id;
     }
 
-    buildPicker(this);
-  };
+    // Show date picker on click
+    _self.showPicker = function() {
+      _self.buildPicker();
+      changeDayId(_self);
+      _self.addListeners(_id);
+      var datepicker = document.getElementById(_id);
+      var left = datepicker.offsetLeft;
+      var top = datepicker.offsetTop + datepicker.offsetHeight - 7;
+      var pickerDiv = document.getElementById('foopicker-' + _id);
+      pickerDiv.style.position = 'absolute';
+      pickerDiv.style.top = top + 'px';
+      pickerDiv.style.left = left + 'px';
+    };
 
-  // Show date picker on click
-  FooPicker.prototype.showPicker = function(picker) {
-    addDateListeners(picker);
-    var datepicker = document.getElementById(picker.options.id);
-    var left = datepicker.offsetLeft;
-    var top = datepicker.offsetTop + datepicker.offsetHeight;
-    var pickerDiv = document.getElementById('foopicker-' + picker.options.id);
-    var foopicker = document.querySelector('.foopicker');
-    pickerDiv.appendChild(foopicker);
-    pickerDiv.classList.add('visible');
-    pickerDiv.style.position = 'absolute';
-    pickerDiv.style.top = top + 'px';
-    pickerDiv.style.left = left + 'px';
-    foopicker.style.display = 'block';
-  };
+    // Hide date picker
+    _self.hidePicker = function(event) {
+      setTimeout(function() {
+        if (!_self.monthChange) {
+          _self.removeListeners(_id);
+          var pickerDiv = document.getElementById('foopicker-' + _id);
+          pickerDiv.innerHTML = null;
+        }
+      }, 150);
+    };
 
-  // Hide date picker
-  FooPicker.prototype.hidePicker = function(picker) {
-    removeDateListeners(picker);
-    var foopicker = document.querySelector('.foopicker');
-    foopicker.style.display = 'none';
-  };
+    // Select date
+    _self.selectDate = function() {
+      _self.monthChange = false;
+      var el = document.getElementById(event.target.id);
+      el.classList.add('foopicker__day--selected');
+      var date = el.dataset.day + '/' + el.dataset.month + '/' + el.dataset.year;
+      _self.selectedDate = date;
+      _self.selectedDay = el.dataset.day;
+      _self.selectedMonth = el.dataset.month;
+      _self.selectedYear = el.dataset.year;
+      document.getElementById(_id).value = date;
+    };
 
-  // Select date
-  FooPicker.prototype.selectDate = function(event, picker) {
-    //event.stopPropagation();
-    console.log(event);
-    console.log(picker);
-  };
+    _self.addListeners = function(id) {
+      var picker = document.getElementById('foopicker-' + id);
+      var el = picker.getElementsByClassName('foopicker__day');
+      for (var count = 0; count < el.length; count++) {
+        if (typeof el[count].onclick !== "function") {
+          var elem = document.getElementById(id + '-foopicker__day--' + (count + 1));
+          addEvent(elem, 'click', _self.selectDate, false);
+        }
+      }
+      var prevBtn = picker.getElementsByClassName('foopicker__arrow--prev')[0];
+      var nextBtn = picker.getElementsByClassName('foopicker__arrow--next')[0];
+      addEvent(prevBtn, 'click', _self.changeMonth, false);
+      addEvent(nextBtn, 'click', _self.changeMonth, false);
+    };
+
+    _self.removeListeners = function(id) {
+      var picker = document.getElementById(id);
+      var el = picker.getElementsByClassName('foopicker__day');
+      for (var count = 0; count < el.length; count++) {
+        if (typeof el[count].onclick === "function") {
+          var elem = document.getElementById(id + '-foopicker__day--' + (count + 1));
+          removeEvent(elem, 'click', _self.selectDate, false);
+        }
+      }
+    };
+
+    _self.changeMonth = function(event) {
+      var className = event.target.className, positive;
+      if (className.indexOf('foopicker__arrow--next') !== -1) {
+        positive = true;
+      }
+      _self.monthChange = true;
+      var day = _self.currentDate;
+      var month = positive ? _self.currentMonth + 1 : _self.currentMonth - 1;
+      var year = _self.currentYear;
+      var date = new Date(year, month , day);
+      var pickerDiv = document.getElementById('foopicker-' + _id);
+      var datepicker = pickerDiv.querySelector('.foopicker');
+      datepicker.innerHTML = buildCalendar(date);
+    };
+
+    _self.buildPicker = function() {
+      var pickerDiv = document.getElementById('foopicker-' + _id);
+      var fragment, datepicker, calendar;
+      fragment = document.createDocumentFragment();
+      datepicker = document.createElement('div');
+      // Add default class name
+      datepicker.className = _self.options.className;
+
+      // Build calendar
+      var date = new Date();
+      _self.currentDate = date.getDate();
+      _self.currentDay = date.getDay();
+      _self.currentMonth = date.getMonth();
+      _self.currentYear = date.getFullYear();
+      calendar = buildCalendar(date);
+
+      // Add calendar to datepicker
+      datepicker.innerHTML = calendar;
+      // Append picker to fragment and add fragment to DOM
+      fragment.appendChild(datepicker);
+      pickerDiv.appendChild(fragment);
+    };
+
+    _self.buildTemplate = function() {
+      var pickerDiv = document.createElement('div');
+      pickerDiv.id = 'foopicker-' + _id;
+      document.body.appendChild(pickerDiv);
+      addListeners(_self);
+    };
+
+    _self.buildTemplate();
+  }
 
   // Extend default options
   function extendOptions(defaults, options) {
@@ -64,39 +149,12 @@
     return defaults;
   }
 
-  // Build the date picker
-  function buildPicker(picker) {
-    var pickerDiv = document.createElement('div');
-    pickerDiv.id = 'foopicker-' + picker.options.id;
-    if (!hasPicker()) {
-      var fragment, datepicker, calendar;
-      fragment = document.createDocumentFragment();
-      datepicker = document.createElement('div');
-      // Add default class name
-      datepicker.className = picker.options.className;
-      datepicker.style.display = 'none';
-
-      // Build calendar
-      calendar = buildCalendar();
-
-      // Add calendar to datepicker
-      datepicker.innerHTML = calendar;
-      // Append picker to fragment and add fragment to DOM
-      fragment.appendChild(datepicker);
-      document.body.appendChild(fragment);
-    }
-    document.body.appendChild(pickerDiv);
-    addEventListeners(picker);
-  }
-
-  function buildCalendar() {
-    var date = new Date();
+  function buildCalendar(date) {
     var today = date.getDate();
     var year = date.getFullYear();
     var month = getMonths(date.getMonth());
     var daysInMonth = getDaysInMonth(date.getMonth());
     var startWeekDay = getWeekDay(1, date.getMonth(), date.getFullYear());
-    var weeks = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
     var padding = [6, 0, 1, 2, 3, 4, 5][startWeekDay];
     var calendar = '<div class="foopicker__header"><table><tr><td>';
     calendar += '<div class="foopicker__arrow foopicker__arrow--prev"></div></td><td>';
@@ -129,6 +187,12 @@
     return calendar;
   }
 
+  function addListeners(picker) {
+    var el = document.getElementById(picker.options.id);
+    addEvent(el, 'click', picker.showPicker, false);
+    addEvent(el, 'blur', picker.hidePicker, false);
+  }
+
   function getMonths(month) {
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', 'December'];
@@ -148,25 +212,41 @@
     return document.querySelector('.foopicker') ? true : false;
   }
 
-  // Add click event to date picker
-  function addEventListeners(picker) {
-    var element = document.getElementById(picker.options.id);
-    element.addEventListener('click', picker.showPicker.bind(null, picker));
-    element.addEventListener('blur', picker.hidePicker.bind(null, picker));
-  }
-
-  function addDateListeners(picker) {
-    var el = document.getElementsByClassName('foopicker__day');
-    for (var count = 0; count < el.length; count++) {
-      el[count].addEventListener('click', picker.selectDate.bind(event, picker));
+  // Function to add events
+  function addEvent(el, type, callback, capture) {
+    if (hasEventListener) {
+      el.addEventListener(type, callback, capture);
+    } else {
+      el.attachEvent('on' + type, callback);
     }
   }
 
-  function removeDateListeners(picker) {
-    var el = document.getElementsByClassName('foopicker__day');
-    for (var count = 0; count < el.length; count++) {
-      el[count].removeEventListener('click', picker.selectDate.bind(event, picker));
+  // Function to remove events
+  function removeEvent(el , type, callback, capture) {
+    if (hasEventListener) {
+      el.removeEventListener(type, callback, capture);
+    } else {
+      el.detachEvent('on' + type, callback);
     }
   }
 
-}(this));
+  function changeDayId(instance) {
+    var id = instance.options.id;
+    var day = parseInt(instance.selectedDay);
+    var picker = document.getElementById('foopicker-' + id);
+    var el = picker.getElementsByClassName('foopicker__day');
+    for (var count = 0; count < el.length; count++) {
+      if ((count + 1) === day) {
+        el[count].className = 'foopicker__day foopicker__day--selected';
+      } else {
+        el[count].className = 'foopicker__day';
+      }
+      if ((count + 1) === instance.currentDate) {
+        el[count].classList.add('foopicker__day--today');
+      }
+      el[count].id = id + '-foopicker__day--' + (count + 1);
+    }
+  }
+
+  return FooPicker;
+})();

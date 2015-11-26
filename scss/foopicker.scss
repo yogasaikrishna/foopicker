@@ -54,6 +54,11 @@ $base-width: 245px;
     @at-root #{&}--today {
       background: $today-color;
     }
+
+    @at-root #{&}--selected {
+      background: $base-blue;
+      color: $white;
+    }
   }
 
   @at-root #{&}__week {

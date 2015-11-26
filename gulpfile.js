@@ -12,7 +12,7 @@ gulp.task('sass', function() {
                 .pipe(sass({outputStyle: 'expanded'})
                 .on('error', sass.logError));
   if (options.minify) {
-    styles.pipe(minifyCss({compatibility: 'ie8'}));
+    styles.pipe(minifyCss());
   }
   styles.pipe(gulp.dest(options.dest))
     .pipe(browserSync.reload({

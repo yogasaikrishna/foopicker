@@ -1,4 +1,76 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600);
 .foopicker {
-  display: block;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-shadow: 0 0 3px #fff;
+  color: #666;
+  font-family: 'Source Sans Pro', sans-serif;
+  margin-top: 10px;
+  width: 245px;
+}
+
+.foopicker table {
   width: 100%;
+}
+
+.foopicker th,
+.foopicker td {
+  text-align: center;
+}
+
+.foopicker__calendar {
+  font-size: 13px;
+  padding: 5px;
+}
+
+.foopicker__day {
+  border-radius: 100%;
+  cursor: pointer;
+  padding: 5px 2px;
+  transition: all .2s ease-out;
+  width: 22px;
+}
+
+.foopicker__day:hover {
+  background: #3498db;
+  color: #fff;
+}
+
+.foopicker__day--today {
+  background: #e4e4e4;
+}
+
+.foopicker__week {
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.foopicker__header {
+  background: #f0f0f0;
+  padding: 15px;
+}
+
+.foopicker__arrow {
+  background-repeat: no-repeat;
+  cursor: pointer;
+  height: 10px;
+  position: relative;
+  width: 9px;
+}
+
+.foopicker__arrow--next {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAYAAABmBXS+AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN5wAADecBmRSqJgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAACRSURBVBiVfZCxDQIxDEVtcMUyV8RFFkJigtNtwALMQJGa6jY4Ka4QoksJPQVVLp8GJIjCvc72/19fphjjOE1TRwuwmc0AChEdiWhQ1XtT9DU/ARxyznvv/eOzXFWmDTP3InIxs20IYd1K+gHAlZmHOqlJUwTgRkS7lFLnnDtJdW8Wl7dz8QVSShmZuVfV879OL3YgSNeg/xESAAAAAElFTkSuQmCC);
+  right: -12px;
+}
+
+.foopicker__arrow--prev {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAYAAABmBXS+AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN5wAADecBmRSqJgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABySURBVBiVlZCxEcJADARXJnPgHDog8LgIl+HMMQ04IWWA1vT6jv6ICPwDP7DhSaPbkdEgpXQupdzt0zAiTpKuwAocdkvu3pvZBdiA4Z0bgKQu57xIugHH+rJFxCzpCUzf3LqW+H91P4vXNF9Q4+6jpMcLnKU484q4fdIAAAAASUVORK5CYII=);
+  left: 8px;
+}
+
+.foopicker__month {
+  font-size: .875em;
+  font-weight: 600;
+  text-transform: uppercase;
 }
