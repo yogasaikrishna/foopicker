@@ -262,12 +262,6 @@ var FooPicker = (function () {
     }
   };
 
-  function buildCalendar(instance, date) {
-    Calendar.date = date;
-    var template = Calendar.buildHeader() + Calendar.buildCalendar();
-    return Calendar.buildHeader() + Calendar.buildCalendar();
-  }
-
   function addListeners(picker) {
     var el = document.getElementById(picker.options.id);
     addEvent(el, 'click', picker.showPicker, false);
@@ -313,24 +307,6 @@ var FooPicker = (function () {
       el.removeEventListener(type, callback, capture);
     } else {
       el.detachEvent('on' + type, callback);
-    }
-  }
-
-  function changeDayId(instance) {
-    var id = instance.options.id;
-    var day = parseInt(instance.selectedDay);
-    var picker = document.getElementById('foopicker-' + id);
-    var el = picker.getElementsByClassName('foopicker__day');
-    for (var count = 0; count < el.length; count++) {
-      if ((count + 1) === day) {
-        el[count].className = 'foopicker__day foopicker__day--selected';
-      } else {
-        el[count].className = 'foopicker__day';
-      }
-      if ((count + 1) === instance.currentDate) {
-        el[count].classList.add('foopicker__day--today');
-      }
-      el[count].id = id + '-foopicker__day--' + (count + 1);
     }
   }
 
