@@ -21,9 +21,11 @@ gulp.task('sass', function() {
 });
 
 gulp.task('script', function() {
-  gulp.src('./foopicker.js')
-    .pipe(uglify())
-    .pipe(gulp.dest('./demos/js/'))
+  var scripts = gulp.src('./foopicker.js');
+  if (options.minify) {
+    scripts.pipe(uglify());
+  }
+  scripts.pipe(gulp.dest('./demos/js/'))
     .pipe(browserSync.reload({
       stream: true
     }));

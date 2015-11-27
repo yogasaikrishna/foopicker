@@ -52,26 +52,33 @@
 }
 
 .foopicker__header {
-  background: #f0f0f0;
+  background: #f2f2f4;
   padding: 15px;
+  text-align: center;
+}
+
+.foopicker__header div {
+  display: inline-block;
 }
 
 .foopicker__arrow {
   background-repeat: no-repeat;
   cursor: pointer;
-  height: 10px;
-  position: relative;
-  width: 9px;
+  height: 24px;
+  outline: 0;
+  position: absolute;
+  top: 31px;
+  width: 14px;
 }
 
 .foopicker__arrow--next {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAYAAABmBXS+AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN5wAADecBmRSqJgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAACRSURBVBiVfZCxDQIxDEVtcMUyV8RFFkJigtNtwALMQJGa6jY4Ka4QoksJPQVVLp8GJIjCvc72/19fphjjOE1TRwuwmc0AChEdiWhQ1XtT9DU/ARxyznvv/eOzXFWmDTP3InIxs20IYd1K+gHAlZmHOqlJUwTgRkS7lFLnnDtJdW8Wl7dz8QVSShmZuVfV879OL3YgSNeg/xESAAAAAElFTkSuQmCC);
-  right: -12px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMCAYAAACulacQAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN5wAADecBmRSqJgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADWSURBVBiVfY8xSkNBFEXPe0njxGB24R4srM1YjFhMGYjYuRxLMWI7lZ8EDAqKiN8mC7B2BULMiPh/noUYvoW57Tncy5Xx+OZZhFfVauC9/6QRFeEFiMtl6yqlcuMPzPntGLgE2XPufZrS/eYKxhjr2aw8EuEC2HXu67ooii6A/FpmJpPJ7akIJ0CpWvWludEUzLhT1uS/2ifVygtASqnV6fTOzBiCPNZ13g8hzPUHbI3MGIrwkHPbhxDmAG3neudmDMCmi0X3MMadj9VPM7aBpFofNAHAN0NkW9nLdIQRAAAAAElFTkSuQmCC);
+  right: 14px;
 }
 
 .foopicker__arrow--prev {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAYAAABmBXS+AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN5wAADecBmRSqJgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABySURBVBiVlZCxEcJADARXJnPgHDog8LgIl+HMMQ04IWWA1vT6jv6ICPwDP7DhSaPbkdEgpXQupdzt0zAiTpKuwAocdkvu3pvZBdiA4Z0bgKQu57xIugHH+rJFxCzpCUzf3LqW+H91P4vXNF9Q4+6jpMcLnKU484q4fdIAAAAASUVORK5CYII=);
-  left: 8px;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMCAYAAACulacQAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN5wAADecBmRSqJgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADXSURBVBiVXZAxTsNAFETfmMRWvL4C3GVRIlFElFRYHABxB1+CBlFEFBFsgQJrWTIIQRWq9NyDLrG8FGDkeNqn+TPzxUBVVSVtO7oLgaOoD5xbT9r2YAWcSXypA977VIqfQFPg3phxHgHUdW0g8aBpCGFpzDi31jaRc+/ZbqdS4jgEbjebz9xa2wDI+5e3P3A9n8+uJIUuaq/QUFEch1PgQ+KyLF9viqL4N6grtN3q+fd8WGZZfGGtbQZTkhUwk/SQpqNz9TOcW0/S9PsRdAIs9mD/fRAOfwCC1k8eHoJobwAAAABJRU5ErkJggg==);
+  left: 18px;
 }
 
 .foopicker__month {
