@@ -5,7 +5,7 @@
 * Lightweight
 * Zero dependencies
 
-![FooPicker Screenshot](http://www.yogasaikrishna.com/wp-content/uploads/2015/11/foopicker.png)
+![FooPicker Screenshot](http://www.yogasaikrishna.com/wp-content/uploads/2015/11/foopicker_screenshot.png)
 
 ## Instructions
 
