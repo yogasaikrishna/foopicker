@@ -39,12 +39,15 @@ var FooPicker = (function () {
     };
 
     // Hide date picker
-    _self.hidePicker = function() {
+    _self.hidePicker = function(event) {
       setTimeout(function() {
         if (!_self.monthChange) {
           _self.removeListeners(_id);
           var pickerDiv = document.getElementById('foopicker-' + _id);
           pickerDiv.innerHTML = '';
+        } else {
+          document.getElementById(_self.options.id).focus();
+          _self.monthChange = false;
         }
       }, 210);
     };
@@ -100,10 +103,10 @@ var FooPicker = (function () {
         // Add default class name
         datepicker.className = _self.options.className;
 
-        // Build calendar
         var date;
-        if (_self.currentDate) {
-          date = new Date(_self.currentYear, _self.currentMonth, _self.currentDate);
+        // Date is selected show that month calendar
+        if (_self.selectedDate) {
+          date = new Date(_self.selectedYear, _self.selectedMonth - 1, _self.selectedDay);
         } else {
           date = new Date();
         }

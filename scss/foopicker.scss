@@ -83,6 +83,10 @@ $base-width: 245px;
     outline: 0;
     position: absolute;
     top: 31px;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
     width: 14px;
 
     @at-root #{&}--next {
