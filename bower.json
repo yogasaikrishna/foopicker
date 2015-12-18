@@ -1,7 +1,10 @@
 {
   "name": "foopicker",
-  "main": "foopicker.js",
-  "version": "0.1",
+  "main": [
+	"foopicker.js",
+	"./css/foopicker.css"
+  ],
+  "version": "0.1.1",
   "homepage": "https://github.com/yogasaikrishna/foopicker",
   "authors": [
     "Yogasaikrishna <yogasaikrishna@gmail.com>"
