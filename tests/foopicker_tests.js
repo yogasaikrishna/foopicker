@@ -11,7 +11,7 @@ describe('Array', function() {
 
   describe("#join", function() {
     it('Should join the array', function() {
-      assert.equal("1,2,3", [1, 2, 3].join());
+      assert.equal("1,2-3", [1, 2, 3].join());
     });
   });
 

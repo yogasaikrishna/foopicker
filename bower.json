@@ -1,0 +1,22 @@
+{
+  "name": "foopicker",
+  "main": "foopicker.js",
+  "version": "0.1",
+  "homepage": "https://github.com/yogasaikrishna/foopicker",
+  "authors": [
+    "Yogasaikrishna <yogasaikrishna@gmail.com>"
+  ],
+  "description": "Pure JavaScript date picker",
+  "keywords": [
+    "Date",
+    "Calendar"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
