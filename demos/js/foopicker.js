@@ -57,7 +57,7 @@ var FooPicker = (function () {
       _self.monthChange = false;
       var el = document.getElementById(event.target.id);
       el.classList.add('foopicker__day--selected');
-      var date = el.dataset.day + '/' + el.dataset.month + '/' + el.dataset.year;
+      var date = format(_self, el.dataset.day, el.dataset.month, el.dataset.year);
       _self.selectedDate = date;
       _self.selectedDay = parseInt(el.dataset.day);
       _self.selectedMonth = parseInt(el.dataset.month);
@@ -130,6 +130,44 @@ var FooPicker = (function () {
     };
 
     _self.buildTemplate();
+  }
+
+  // Date formatter
+  function format(instance, day, month, year) {
+    switch(instance.options.dateFormat) {
+      case 'dd-MM-yyyy':
+        return day + '-' + month + '-' + year;
+      case 'dd-MMM-yyyy':
+        return day + '-' + getShortMonth(month) + '-' + year;
+      case 'dd.MM.yyyy':
+        return day + '.' + month + '.' + year;
+      case 'dd.MMM.yyyy':
+        return day + '.' + getShortMonth(month) + '.' + year;
+      case 'dd/MM/yyyy':
+        return day + '/' + month + '/' + year;
+      case 'dd/MMM/yyyy':
+        return day + '/' + getShortMonth(month) + '/' + year;
+      case 'MM-dd-yyyy':
+        return month + '-' + day + '-' + year;
+      case 'MM.dd.yyyy':
+        return month + '.' + day + '.' + year;
+      case 'MM/dd/yyyy':
+        return month + '/' + day + '/' + year;
+      case 'yyyy-MM-dd':
+        return year + '-' + month + '-' + day;
+      case 'yyyy-MMM-dd':
+        return year + '-' + getShortMonth(month) + '-' + day;
+      case 'yyyy.MM.dd':
+        return year + '.' + month + '.' + day;
+      case 'yyyy.MMM.dd':
+        return year + '.' + getShortMonth(month) + '.' + day;
+      case 'yyyy/MM/dd':
+        return year + '/' + month + '/' + day;
+      case 'yyyy/MMM/dd':
+        return year + '/' + getShortMonth(month) + '/' + day;
+      default:
+        return day + '/' + month + '/' + year;
+    }
   }
 
   // Extend default options
@@ -275,6 +313,11 @@ var FooPicker = (function () {
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', 'December'];
     return month >= 0 ? months[month] : months;
+  }
+
+  function getShortMonth(month) {
+    return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+      'Oct', 'Nov', 'Dec'][parseInt(month) - 1];
   }
 
   function getDaysInMonth(year, month) {
