@@ -29,9 +29,9 @@ var FooPicker = (function () {
     // Show date picker on click
     _self.showPicker = function() {
       _self.buildPicker();
-      var datepicker = document.getElementById(_id);
-      var left = datepicker.offsetLeft;
-      var top = datepicker.offsetTop + datepicker.offsetHeight - 7;
+      var datepicker = document.getElementById(_id).getBoundingClientRect();
+      var left = datepicker.left;
+      var top = datepicker.bottom - 7;
       var pickerDiv = document.getElementById('foopicker-' + _id);
       pickerDiv.style.position = 'absolute';
       pickerDiv.style.top = top + 'px';
