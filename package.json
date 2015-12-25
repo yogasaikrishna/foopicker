@@ -1,6 +1,6 @@
 {
   "name": "foopicker",
-  "version": "1.0.0",
+  "version": "0.1.5",
   "description": "Pure JavaScript date picker",
   "main": "foopicker.js",
   "scripts": {

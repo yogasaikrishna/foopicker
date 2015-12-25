@@ -53,7 +53,7 @@ var FooPicker = (function () {
     };
 
     // Select date
-    _self.selectDate = function() {
+    _self.selectDate = function(event) {
       _self.monthChange = false;
       var el = document.getElementById(event.target.id);
       el.classList.add('foopicker__day--selected');
