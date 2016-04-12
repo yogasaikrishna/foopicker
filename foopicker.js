@@ -50,7 +50,9 @@ var FooPicker = (function () {
         if (!_self.monthChange) {
           _self.removeListeners(_id);
           pickerDiv = document.getElementById('foopicker-' + _id);
-          pickerDiv.innerHTML = '';
+          if (pickerDiv) {
+            pickerDiv.innerHTML = '';
+          }
         } else {
           pickerField = document.getElementById(_self.options.id);
           if (pickerField) {
