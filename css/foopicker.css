@@ -33,7 +33,7 @@
 }
 
 .foopicker__day:hover {
-  background: #3498db;
+  background: #1fbad6;
   color: #fff;
 }
 
@@ -42,7 +42,7 @@
 }
 
 .foopicker__day--selected {
-  background: #3498db;
+  background: #1fbad6;
   color: #fff;
 }
 

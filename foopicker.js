@@ -29,24 +29,33 @@ var FooPicker = (function () {
     // Show date picker on click
     _self.showPicker = function() {
       _self.buildPicker();
-      var datepicker = document.getElementById(_id).getBoundingClientRect();
-      var left = datepicker.left;
-      var top = datepicker.bottom - 7;
+      var pickerField = document.getElementById(_id);
       var pickerDiv = document.getElementById('foopicker-' + _id);
-      pickerDiv.style.position = 'absolute';
-      pickerDiv.style.top = top + 'px';
-      pickerDiv.style.left = left + 'px';
+      if (pickerField) {
+        var datepicker = pickerField.getBoundingClientRect();
+        var left = datepicker.left;
+        var top = datepicker.bottom - 7;
+        if (pickerDiv) {
+          pickerDiv.style.position = 'absolute';
+          pickerDiv.style.top = top + 'px';
+          pickerDiv.style.left = left + 'px';
+        }
+      }
     };
 
     // Hide date picker
     _self.hidePicker = function(event) {
       setTimeout(function() {
+        var pickerDiv, pickerField;
         if (!_self.monthChange) {
           _self.removeListeners(_id);
-          var pickerDiv = document.getElementById('foopicker-' + _id);
+          pickerDiv = document.getElementById('foopicker-' + _id);
           pickerDiv.innerHTML = '';
         } else {
-          document.getElementById(_self.options.id).focus();
+          pickerField = document.getElementById(_self.options.id);
+          if (pickerField) {
+            pickerField.focus();
+          }
           _self.monthChange = false;
         }
       }, 210);
@@ -56,25 +65,35 @@ var FooPicker = (function () {
     _self.selectDate = function(event) {
       _self.monthChange = false;
       var el = document.getElementById(event.target.id);
-      el.classList.add('foopicker__day--selected');
-      var date = format(_self, el.dataset.day, el.dataset.month, el.dataset.year);
-      _self.selectedDate = date;
-      _self.selectedDay = parseInt(el.dataset.day);
-      _self.selectedMonth = parseInt(el.dataset.month);
-      _self.selectedYear = parseInt(el.dataset.year);
-      document.getElementById(_id).value = date;
+      var pickerField = document.getElementById(_id);
+      if (el) {
+        el.classList.add('foopicker__day--selected');
+        var date = format(_self, el.dataset.day, el.dataset.month, el.dataset.year);
+        _self.selectedDate = date;
+        _self.selectedDay = parseInt(el.dataset.day);
+        _self.selectedMonth = parseInt(el.dataset.month);
+        _self.selectedYear = parseInt(el.dataset.year);
+        if (pickerField) {
+          pickerField.value = date;
+        }
+      }
       _self.hidePicker();
     };
 
     _self.removeListeners = function(id) {
       var picker = document.getElementById(id);
-      var el = picker.getElementsByClassName('foopicker__day');
-      for (var count = 0; count < el.length; count++) {
-        if (typeof el[count].onclick === "function") {
-          var elem = document.getElementById(id + '-foopicker__day--' + (count + 1));
-          removeEvent(elem, 'click', _self.selectDate, false);
+      if (picker) {
+        var el = picker.getElementsByClassName('foopicker__day');
+        if (el && el.length) {
+          for (var count = 0; count < el.length; count++) {
+            if (typeof el[count].onclick === "function") {
+              var elem = document.getElementById(id + '-foopicker__day--' + (count + 1));
+              removeEvent(elem, 'click', _self.selectDate, false);
+            }
+          }
         }
       }
+      document.removeEventListener('keydown', keyDownListener, false);
     };
 
     _self.changeMonth = function(event) {
@@ -89,14 +108,16 @@ var FooPicker = (function () {
       _self.currentMonth = month;
       Calendar.date = new Date(year, month , day);
       var pickerDiv = document.getElementById('foopicker-' + _id);
-      var datepicker = pickerDiv.querySelector('.foopicker');
-      datepicker.innerHTML = Calendar.buildHeader() + Calendar.buildCalendar();
-      Calendar.addListeners(_self);
+      if (pickerDiv) {
+        var datepicker = pickerDiv.querySelector('.foopicker');
+        datepicker.innerHTML = Calendar.buildHeader() + Calendar.buildCalendar();
+        Calendar.addListeners(_self);
+      }
     };
 
     _self.buildPicker = function() {
       var pickerDiv = document.getElementById('foopicker-' + _id);
-      if (!hasPicker(pickerDiv)) {
+      if (pickerDiv && !hasPicker(pickerDiv)) {
         var fragment, datepicker, calendar;
         fragment = document.createDocumentFragment();
         datepicker = document.createElement('div');
@@ -120,6 +141,7 @@ var FooPicker = (function () {
 
         Calendar.addListeners(_self);
       }
+      document.addEventListener('keydown', keyDownListener, false);
     };
 
     _self.buildTemplate = function() {
@@ -128,6 +150,18 @@ var FooPicker = (function () {
       document.body.appendChild(pickerDiv);
       addListeners(_self);
     };
+
+    _self.destroy = function() {
+      var pickerDiv = document.getElementById('foopicker-' + _id);
+      if (pickerDiv) {
+        document.body.removeChild(pickerDiv);
+      }
+    };
+
+    function keyDownListener() {
+      _self.monthChange = false;
+      _self.hidePicker();
+    }
 
     _self.buildTemplate();
   }
@@ -254,19 +288,23 @@ var FooPicker = (function () {
     // Header click listeners
     addListeners: function(instance) {
       var id = instance.options.id;
-      var picker = document.getElementById('foopicker-' + id);
-      var prevBtn = picker.getElementsByClassName('foopicker__arrow--prev')[0];
-      var nextBtn = picker.getElementsByClassName('foopicker__arrow--next')[0];
-      addEvent(prevBtn, 'click', instance.changeMonth, false);
-      addEvent(nextBtn, 'click', instance.changeMonth, false);
+      var pickerDiv = document.getElementById('foopicker-' + id);
+      if (pickerDiv) {
+        var prevBtn = pickerDiv.getElementsByClassName('foopicker__arrow--prev')[0];
+        var nextBtn = pickerDiv.getElementsByClassName('foopicker__arrow--next')[0];
+        addEvent(prevBtn, 'click', instance.changeMonth, false);
+        addEvent(nextBtn, 'click', instance.changeMonth, false);
+      }
 
       this.modifyDateClass(instance);
 
-      var el = picker.getElementsByClassName('foopicker__day');
-      for (var count = 0; count < el.length; count++) {
-        if (typeof el[count].onclick !== "function") {
-          var elem = document.getElementById(id + '-foopicker__day--' + (count + 1));
-          addEvent(elem, 'click', instance.selectDate, false);
+      var el = pickerDiv.getElementsByClassName('foopicker__day');
+      if (el && el.length) {
+        for (var count = 0; count < el.length; count++) {
+          if (typeof el[count].onclick !== "function") {
+            var elem = document.getElementById(id + '-foopicker__day--' + (count + 1));
+            addEvent(elem, 'click', instance.selectDate, false);
+          }
         }
       }
 
@@ -276,21 +314,25 @@ var FooPicker = (function () {
     modifyDateClass: function(instance) {
       var id = instance.options.id, day = instance.selectedDay,
         month = instance.selectedMonth - 1, year = instance.selectedYear;
-      var picker = document.getElementById('foopicker-' + id);
-      var el = picker.getElementsByClassName('foopicker__day');
-      for (var count = 0; count < el.length; count++) {
-        if ((count + 1) === day && this.month() === month &&
-          this.year() === year) {
-          el[count].className = 'foopicker__day foopicker__day--selected';
-        } else {
-          el[count].className = 'foopicker__day';
+      var pickerDiv = document.getElementById('foopicker-' + id);
+      if (pickerDiv) {
+        var el = pickerDiv.getElementsByClassName('foopicker__day');
+        if (el && el.length) {
+          for (var count = 0; count < el.length; count++) {
+            if ((count + 1) === day && this.month() === month &&
+              this.year() === year) {
+              el[count].className = 'foopicker__day foopicker__day--selected';
+            } else {
+              el[count].className = 'foopicker__day';
+            }
+            if ((count + 1) === instance.currentDate &&
+              this.month() === instance.currentMonth - 1 &&
+              this.year() === instance.currentYear) {
+              el[count].classList.add('foopicker__day--today');
+            }
+            el[count].id = id + '-foopicker__day--' + (count + 1);
+          }
         }
-        if ((count + 1) === instance.currentDate &&
-          this.month() === instance.currentMonth - 1 &&
-          this.year() === instance.currentYear) {
-          el[count].classList.add('foopicker__day--today');
-        }
-        el[count].id = id + '-foopicker__day--' + (count + 1);
       }
     },
 
@@ -305,8 +347,10 @@ var FooPicker = (function () {
 
   function addListeners(picker) {
     var el = document.getElementById(picker.options.id);
-    addEvent(el, 'click', picker.showPicker, false);
-    addEvent(el, 'blur', picker.hidePicker, false);
+    if (el) {
+      addEvent(el, 'click', picker.showPicker, false);
+      addEvent(el, 'blur', picker.hidePicker, false);
+    }
   }
 
   function getMonths(month) {
@@ -335,24 +379,32 @@ var FooPicker = (function () {
 
   // Check if foopicker is already built and added to DOM
   function hasPicker(el) {
-    return el.querySelector('.foopicker') ? true : false;
+    return el && el.querySelector('.foopicker') ? true : false;
   }
 
   // Function to add events
   function addEvent(el, type, callback, capture) {
     if (hasEventListener) {
-      el.addEventListener(type, callback, capture);
+      if (el) {
+        el.addEventListener(type, callback, capture);
+      }
     } else {
-      el.attachEvent('on' + type, callback);
+      if (el) {
+        el.attachEvent('on' + type, callback);
+      }
     }
   }
 
   // Function to remove events
   function removeEvent(el , type, callback, capture) {
     if (hasEventListener) {
-      el.removeEventListener(type, callback, capture);
+      if (el) {
+        el.removeEventListener(type, callback, capture);
+      }
     } else {
-      el.detachEvent('on' + type, callback);
+      if (el) {
+        el.detachEvent('on' + type, callback);
+      }
     }
   }
 
