@@ -36,9 +36,10 @@ var FooPicker = (function () {
         var left = datepicker.left;
         var top = datepicker.bottom - 7;
         if (pickerDiv) {
-          pickerDiv.style.position = 'absolute';
+          pickerDiv.style.position = 'fixed';
           pickerDiv.style.top = top + 'px';
           pickerDiv.style.left = left + 'px';
+          pickerDiv.style.zIndex = '99999';
         }
       }
     };
@@ -50,7 +51,9 @@ var FooPicker = (function () {
         if (!_self.monthChange) {
           _self.removeListeners(_id);
           pickerDiv = document.getElementById('foopicker-' + _id);
-          pickerDiv.innerHTML = '';
+          if (pickerDiv) {
+            pickerDiv.innerHTML = '';
+          }
         } else {
           pickerField = document.getElementById(_self.options.id);
           if (pickerField) {
