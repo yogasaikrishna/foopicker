@@ -2,7 +2,7 @@
 
 ### Pure JavaScript Datepicker
 
-* Lightweight
+* Lightweight (6.2KB minified)
 * Zero dependencies
 
 ![FooPicker Screenshot](http://www.yogasaikrishna.com/wp-content/uploads/2015/11/foopicker_screenshot.png)
