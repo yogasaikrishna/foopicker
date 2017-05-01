@@ -272,7 +272,7 @@ var FooPicker = (function () {
         if (day < 0) {
           template += '<td></td>';
         } else {
-          // dayClass = day === (this.today() - 1) ? 'foopicker__day--today' : '';
+          dayClass = day === (this.today() - 1) ? 'foopicker__day--today' : '';
           template += '<td><div class="foopicker__day ' + dayClass + '" ';
           template += 'data-day="' + (day + 1) + '" data-month="' + (this.month() + 1);
           template += '" data-year="' + this.year() + '" ';
@@ -316,7 +316,7 @@ var FooPicker = (function () {
 
     modifyDateClass: function(instance) {
       var id = instance.options.id, day = instance.selectedDay,
-        month = instance.selectedMonth - 1, year = instance.selectedYear;
+        month = instance.selectedMonth - 1, year = instance.selectedYear, dayClass;
       var pickerDiv = document.getElementById('foopicker-' + id);
       if (pickerDiv) {
         var el = pickerDiv.getElementsByClassName('foopicker__day');
@@ -326,7 +326,8 @@ var FooPicker = (function () {
               this.year() === year) {
               el[count].className = 'foopicker__day foopicker__day--selected';
             } else {
-              el[count].className = 'foopicker__day';
+              dayClass = count === (this.today() - 1) ? ' foopicker__day--today' : '';
+              el[count].className = 'foopicker__day' + dayClass;
             }
             if ((count + 1) === instance.currentDate &&
               this.month() === instance.currentMonth - 1 &&
