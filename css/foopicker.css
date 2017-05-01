@@ -38,7 +38,8 @@
 }
 
 .foopicker__day--today {
-  background: #e4e4e4;
+  background: #1fbad6;
+  color: #fff;
 }
 
 .foopicker__day--selected {
