@@ -11,6 +11,7 @@ var FooPicker = (function () {
 
   var hasEventListener = window.addEventListener;
   var weeks = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   function FooPicker() {
     var _self = this;
@@ -18,7 +19,8 @@ var FooPicker = (function () {
 
     var defaults = {
       className: 'foopicker',
-      dateFormat: 'dd-MM-yyyy'
+      dateFormat: 'dd-MM-yyyy',
+      disable: []
     };
 
     if (arguments[0] && typeof arguments[0] === "object") {
@@ -120,6 +122,7 @@ var FooPicker = (function () {
 
     _self.buildPicker = function() {
       var pickerDiv = document.getElementById('foopicker-' + _id);
+      var pickerField = document.getElementById(_id);
       if (pickerDiv && !hasPicker(pickerDiv)) {
         var fragment, datepicker, calendar;
         fragment = document.createDocumentFragment();
@@ -127,10 +130,16 @@ var FooPicker = (function () {
         // Add default class name
         datepicker.className = _self.options.className;
 
-        var date;
         // Date is selected show that month calendar
+        var date;
         if (_self.selectedDate) {
           date = new Date(_self.selectedYear, _self.selectedMonth - 1, _self.selectedDay);
+        } else if (pickerField && pickerField.value) {
+          date = parse(_self, pickerField.value);
+          _self.selectedDay = date.getDate();
+          _self.selectedMonth = date.getMonth() + 1;
+          _self.selectedYear = date.getFullYear();
+          _self.selectedDate = format(_self, date.getDate(), date.getMonth() + 1, date.getFullYear());
         } else {
           date = new Date();
         }
@@ -204,6 +213,77 @@ var FooPicker = (function () {
         return year + '/' + getShortMonth(month) + '/' + day;
       default:
         return day + '/' + month + '/' + year;
+    }
+  }
+
+  // Date parser
+  function parse(instance, value) {
+    var date, dateArray;
+    switch(instance.options.dateFormat) {
+      case 'dd-MM-yyyy':
+        dateArray = value.split('-');
+        date = new Date(parseInt(dateArray[2]), parseInt(dateArray[1]) - 1, parseInt(dateArray[0]));
+        return date;
+      case 'dd-MMM-yyyy':
+        dateArray = value.split('-');
+        date = new Date(parseInt(dateArray[2], getMonthNumber(dateArray[1]), parseInt(dateArray[0])));
+        return date;
+      case 'dd.MM.yyyy':
+        dateArray = value.split('.');
+        date = new Date(parseInt(dateArray[2]), parseInt(dateArray[1]) - 1, parseInt(dateArray[0]));
+        return date;
+      case 'dd.MMM.yyyy':
+        dateArray = value.split('.');
+        date = new Date(parseInt(dateArray[2], getMonthNumber(dateArray[1]), parseInt(dateArray[0])));
+        return date;
+      case 'dd/MM/yyyy':
+        dateArray = value.split('/');
+        date = new Date(parseInt(dateArray[2]), parseInt(dateArray[1]) - 1, parseInt(dateArray[0]));
+        return date;
+      case 'dd/MMM/yyyy':
+        dateArray = value.split('/');
+        date = new Date(parseInt(dateArray[2], getMonthNumber(dateArray[1]), parseInt(dateArray[0])));
+        return date;
+      case 'MM-dd-yyyy':
+        dateArray = value.split('-');
+        date = new Date(parseInt(dateArray[2]), parseInt(dateArray[0]) - 1, parseInt(dateArray[1]));
+        return date;
+      case 'MM.dd.yyyy':
+        dateArray = value.split('.');
+        date = new Date(parseInt(dateArray[2]), parseInt(dateArray[0]) - 1, parseInt(dateArray[1]));
+        return date;
+      case 'MM/dd/yyyy':
+        dateArray = value.split('/');
+        date = new Date(parseInt(dateArray[2]), parseInt(dateArray[0]) - 1, parseInt(dateArray[1]));
+        return date;
+      case 'yyyy-MM-dd':
+        dateArray = value.split('-');
+        date = new Date(parseInt(dateArray[0]), parseInt(dateArray[1]) - 1, parseInt(dateArray[2]));
+        return date;
+      case 'yyyy-MMM-dd':
+        dateArray = value.split('-');
+        date = new Date(parseInt(dateArray[0]), getMonthNumber(dateArray[1]), parseInt(dateArray[2]));
+        return date;
+      case 'yyyy.MM.dd':
+        dateArray = value.split('.');
+        date = new Date(parseInt(dateArray[0]), parseInt(dateArray[1]) - 1, parseInt(dateArray[2]));
+        return date;
+      case 'yyyy.MMM.dd':
+        dateArray = value.split('.');
+        date = new Date(parseInt(dateArray[0]), getMonthNumber(dateArray[1]), parseInt(dateArray[2]));
+        return date;
+      case 'yyyy/MM/dd':
+        dateArray = value.split('/');
+        date = new Date(parseInt(dateArray[0]), parseInt(dateArray[1]) - 1, parseInt(dateArray[2]));
+        return date;
+      case 'yyyy/MMM/dd':
+        dateArray = value.split('/');
+        date = new Date(parseInt(dateArray[0]), getMonthNumber(dateArray[1]), parseInt(dateArray[2]));
+        return date;
+      default:
+        dateArray = value.split('/');
+        date = new Date(parseInt(dateArray[2]), parseInt(dateArray[1]) - 1, parseInt(dateArray[0]));
+        return date;
     }
   }
 
@@ -299,39 +379,52 @@ var FooPicker = (function () {
         addEvent(nextBtn, 'click', instance.changeMonth, false);
       }
 
+      this.changeInstanceDate(instance);
       this.modifyDateClass(instance);
 
       var el = pickerDiv.getElementsByClassName('foopicker__day');
       if (el && el.length) {
         for (var count = 0; count < el.length; count++) {
           if (typeof el[count].onclick !== "function") {
-            var elem = document.getElementById(id + '-foopicker__day--' + (count + 1));
-            addEvent(elem, 'click', instance.selectDate, false);
+            if (el[count].className && el[count].className.indexOf('foopicker__day--disabled') === -1) {
+              var elem = document.getElementById(id + '-foopicker__day--' + (count + 1));
+              addEvent(elem, 'click', instance.selectDate, false);
+            }
           }
         }
       }
-
-      this.changeInstanceDate(instance);
     },
 
     modifyDateClass: function(instance) {
-      var id = instance.options.id, day = instance.selectedDay,
-        month = instance.selectedMonth - 1, year = instance.selectedYear, dayClass;
+      var id = instance.options.id, day = instance.selectedDay, currentDate, disabled;
+      var date = new Date();
+      var month = date.getMonth(), year = date.getFullYear(), dayClass;
       var pickerDiv = document.getElementById('foopicker-' + id);
       if (pickerDiv) {
         var el = pickerDiv.getElementsByClassName('foopicker__day');
         if (el && el.length) {
           for (var count = 0; count < el.length; count++) {
-            if ((count + 1) === day && this.month() === month &&
-              this.year() === year) {
-              el[count].className = 'foopicker__day foopicker__day--selected';
-            } else {
-              dayClass = count === (this.today() - 1) ? ' foopicker__day--today' : '';
-              el[count].className = 'foopicker__day' + dayClass;
+            disabled = '';
+            currentDate = format(instance, el[count].dataset.day, el[count].dataset.month,
+              el[count].dataset.year);
+            if (instance.options.disable && instance.options.disable.indexOf(currentDate) !== -1) {
+              disabled = 'foopicker__day--disabled';
             }
-            if ((count + 1) === instance.currentDate &&
-              this.month() === instance.currentMonth - 1 &&
-              this.year() === instance.currentYear) {
+
+            el[count].className = 'foopicker__day';
+            if ((count + 1) === day && this.month() === instance.selectedMonth - 1 &&
+              this.year() === instance.selectedYear) {
+              el[count].className += ' foopicker__day--selected' + ' ' + disabled;
+            } else {
+              if (day === this.today() - 1 && month === this.month() && year === this.year()) {
+                dayClass = ' foopicker__day--today';
+              } else {
+                dayClass = '';
+              }
+              el[count].className += dayClass + ' ' + disabled;
+            }
+
+            if ((count + 1) === date.getDate() && this.month() === month && this.year() === year) {
               el[count].classList.add('foopicker__day--today');
             }
             el[count].id = id + '-foopicker__day--' + (count + 1);
@@ -364,8 +457,11 @@ var FooPicker = (function () {
   }
 
   function getShortMonth(month) {
-    return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-      'Oct', 'Nov', 'Dec'][parseInt(month) - 1];
+    return months[parseInt(month) - 1];
+  }
+
+  function getMonthNumber(month) {
+    return months.indexOf(month);
   }
 
   function getDaysInMonth(year, month) {

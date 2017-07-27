@@ -52,13 +52,24 @@ $base-width: 245px;
     }
 
     @at-root #{&}--today {
-      background: $base-blue;
-      color: $white;
+      background: lighten($base-blue, 45%);
+      color: $base-black;
     }
 
     @at-root #{&}--selected {
       background: $base-blue;
       color: $white;
+    }
+
+    @at-root #{&}--disabled {
+      background: lighten($base-black, 50%);
+      color: lighten($base-black, 35%);
+      cursor: not-allowed;
+
+      &:hover {
+        background: lighten($base-black, 50%);
+        color: lighten($base-black, 35%);
+      }
     }
   }
 

@@ -38,13 +38,24 @@
 }
 
 .foopicker__day--today {
-  background: #1fbad6;
-  color: #fff;
+  background: #e0f6fb;
+  color: #666;
 }
 
 .foopicker__day--selected {
   background: #1fbad6;
   color: #fff;
+}
+
+.foopicker__day--disabled {
+  background: #e6e6e6;
+  color: #bfbfbf;
+  cursor: not-allowed;
+}
+
+.foopicker__day--disabled:hover {
+  background: #e6e6e6;
+  color: #bfbfbf;
 }
 
 .foopicker__week {
