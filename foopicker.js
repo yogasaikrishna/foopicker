@@ -182,37 +182,37 @@ var FooPicker = (function () {
   function format(instance, day, month, year) {
     switch(instance.options.dateFormat) {
       case 'dd-MM-yyyy':
-        return day + '-' + month + '-' + year;
+        return day + '-' + (month < 10 ? '0' + month : month) + '-' + year;
       case 'dd-MMM-yyyy':
         return day + '-' + getShortMonth(month) + '-' + year;
       case 'dd.MM.yyyy':
-        return day + '.' + month + '.' + year;
+        return day + '.' + (month < 10 ? '0' + month : month) + '.' + year;
       case 'dd.MMM.yyyy':
         return day + '.' + getShortMonth(month) + '.' + year;
       case 'dd/MM/yyyy':
-        return day + '/' + month + '/' + year;
+        return day + '/' + (month < 10 ? '0' + month : month) + '/' + year;
       case 'dd/MMM/yyyy':
         return day + '/' + getShortMonth(month) + '/' + year;
       case 'MM-dd-yyyy':
-        return month + '-' + day + '-' + year;
+        return (month < 10 ? '0' + month : month) + '-' + day + '-' + year;
       case 'MM.dd.yyyy':
-        return month + '.' + day + '.' + year;
+        return (month < 10 ? '0' + month : month) + '.' + day + '.' + year;
       case 'MM/dd/yyyy':
-        return month + '/' + day + '/' + year;
+        return (month < 10 ? '0' + month : month) + '/' + day + '/' + year;
       case 'yyyy-MM-dd':
-        return year + '-' + month + '-' + day;
+        return year + '-' + (month < 10 ? '0' + month : month) + '-' + day;
       case 'yyyy-MMM-dd':
         return year + '-' + getShortMonth(month) + '-' + day;
       case 'yyyy.MM.dd':
-        return year + '.' + month + '.' + day;
+        return year + '.' + (month < 10 ? '0' + month : month) + '.' + day;
       case 'yyyy.MMM.dd':
         return year + '.' + getShortMonth(month) + '.' + day;
       case 'yyyy/MM/dd':
-        return year + '/' + month + '/' + day;
+        return year + '/' + (month < 10 ? '0' + month : month) + '/' + day;
       case 'yyyy/MMM/dd':
         return year + '/' + getShortMonth(month) + '/' + day;
       default:
-        return day + '/' + month + '/' + year;
+        return day + '/' + (month < 10 ? '0' + month : month) + '/' + year;
     }
   }
 

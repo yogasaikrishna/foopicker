@@ -27,7 +27,7 @@
 <body>
   <div class="container">
     <label>START DATE</label>
-    <input type="text" id="datepicker" value="2017/Jul/02"/>
+    <input type="text" id="datepicker" value="02/11/2017"/>
   </div>
   <br/>
   <div class="container">
@@ -40,8 +40,8 @@
   <script type="text/javascript">
     var foopicker = new FooPicker({
       id: 'datepicker',
-      dateFormat: 'yyyy/MMM/dd',
-      disable: ['2017/Jul/16', '2017/Jul/18', '2017/Jul/21']
+      dateFormat: 'dd/MM/yyyy',
+      disable: ['29/07/2017', '30/07/2017', '31/07/2017']
     });
     var foopicker2 = new FooPicker({
       id: 'datepicker2'
