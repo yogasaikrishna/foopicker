@@ -180,39 +180,41 @@ var FooPicker = (function () {
 
   // Date formatter
   function format(instance, day, month, year) {
+    day = day < 10 ? '0' + day : day;
+    month = month < 10 ? '0' + month : month;
     switch(instance.options.dateFormat) {
       case 'dd-MM-yyyy':
-        return day + '-' + (month < 10 ? '0' + month : month) + '-' + year;
+        return day + '-' + month + '-' + year;
       case 'dd-MMM-yyyy':
-        return day + '-' + getShortMonth(month) + '-' + year;
+        return day + '-' + getShortMonth(parseInt(month)) + '-' + year;
       case 'dd.MM.yyyy':
-        return day + '.' + (month < 10 ? '0' + month : month) + '.' + year;
+        return day + '.' + month + '.' + year;
       case 'dd.MMM.yyyy':
-        return day + '.' + getShortMonth(month) + '.' + year;
+        return day + '.' + getShortMonth(parseInt(month)) + '.' + year;
       case 'dd/MM/yyyy':
-        return day + '/' + (month < 10 ? '0' + month : month) + '/' + year;
+        return day + '/' + month + '/' + year;
       case 'dd/MMM/yyyy':
-        return day + '/' + getShortMonth(month) + '/' + year;
+        return day + '/' + getShortMonth(parseInt(month)) + '/' + year;
       case 'MM-dd-yyyy':
-        return (month < 10 ? '0' + month : month) + '-' + day + '-' + year;
+        return month + '-' + day + '-' + year;
       case 'MM.dd.yyyy':
-        return (month < 10 ? '0' + month : month) + '.' + day + '.' + year;
+        return month + '.' + day + '.' + year;
       case 'MM/dd/yyyy':
-        return (month < 10 ? '0' + month : month) + '/' + day + '/' + year;
+        return month + '/' + day + '/' + year;
       case 'yyyy-MM-dd':
-        return year + '-' + (month < 10 ? '0' + month : month) + '-' + day;
+        return year + '-' + month + '-' + day;
       case 'yyyy-MMM-dd':
-        return year + '-' + getShortMonth(month) + '-' + day;
+        return year + '-' + getShortMonth(parseInt(month)) + '-' + day;
       case 'yyyy.MM.dd':
-        return year + '.' + (month < 10 ? '0' + month : month) + '.' + day;
+        return year + '.' + month + '.' + day;
       case 'yyyy.MMM.dd':
-        return year + '.' + getShortMonth(month) + '.' + day;
+        return year + '.' + getShortMonth(parseInt(month)) + '.' + day;
       case 'yyyy/MM/dd':
-        return year + '/' + (month < 10 ? '0' + month : month) + '/' + day;
+        return year + '/' + month + '/' + day;
       case 'yyyy/MMM/dd':
-        return year + '/' + getShortMonth(month) + '/' + day;
+        return year + '/' + getShortMonth(parseInt(month)) + '/' + day;
       default:
-        return day + '/' + (month < 10 ? '0' + month : month) + '/' + year;
+        return day + '/' + month + '/' + year;
     }
   }
 
@@ -407,7 +409,6 @@ var FooPicker = (function () {
             disabled = '';
             currentDate = format(instance, el[count].dataset.day, el[count].dataset.month,
               el[count].dataset.year);
-            console.log(currentDate);
             if (instance.options.disable && instance.options.disable.indexOf(currentDate) !== -1) {
               disabled = 'foopicker__day--disabled';
             }
