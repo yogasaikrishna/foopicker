@@ -463,7 +463,8 @@ var FooPicker = (function () {
   }
 
   function getMonthNumber(month) {
-    return months.indexOf(month);
+    var formatted = month.charAt(0).toUpperCase() + month.substr(1, month.length - 1).toLowerCase();
+    return months.indexOf(formatted);
   }
 
   function getDaysInMonth(year, month) {
