@@ -132,9 +132,7 @@ var FooPicker = (function () {
 
         // Date is selected show that month calendar
         var date;
-        if (_self.selectedDate) {
-          date = new Date(_self.selectedYear, _self.selectedMonth - 1, _self.selectedDay);
-        } else if (pickerField && pickerField.value) {
+        if (pickerField && pickerField.value && pickerField.value.length >= 10) {
           date = parse(_self, pickerField.value);
           _self.selectedDay = date.getDate();
           _self.selectedMonth = date.getMonth() + 1;

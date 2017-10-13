@@ -19,7 +19,7 @@ var FooPicker = (function () {
 
     var defaults = {
       className: 'foopicker',
-      dateFormat: 'dd-MM-yyyy',
+      dateFormat: 'dd-MMM-yyyy',
       disable: []
     };
 
@@ -132,9 +132,7 @@ var FooPicker = (function () {
 
         // Date is selected show that month calendar
         var date;
-        if (_self.selectedDate) {
-          date = new Date(_self.selectedYear, _self.selectedMonth - 1, _self.selectedDay);
-        } else if (pickerField && pickerField.value) {
+        if (pickerField && pickerField.value && pickerField.value.length >= 10) {
           date = parse(_self, pickerField.value);
           _self.selectedDay = date.getDate();
           _self.selectedMonth = date.getMonth() + 1;
@@ -214,7 +212,7 @@ var FooPicker = (function () {
       case 'yyyy/MMM/dd':
         return year + '/' + getShortMonth(parseInt(month)) + '/' + day;
       default:
-        return day + '/' + month + '/' + year;
+        return day + '-' + getShortMonth(parseInt(month)) + '-' + year;
     }
   }
 
@@ -228,7 +226,7 @@ var FooPicker = (function () {
         return date;
       case 'dd-MMM-yyyy':
         dateArray = value.split('-');
-        date = new Date(parseInt(dateArray[2], getMonthNumber(dateArray[1]), parseInt(dateArray[0])));
+        date = new Date(parseInt(dateArray[2]), getMonthNumber(dateArray[1]), parseInt(dateArray[0]));
         return date;
       case 'dd.MM.yyyy':
         dateArray = value.split('.');
@@ -236,7 +234,7 @@ var FooPicker = (function () {
         return date;
       case 'dd.MMM.yyyy':
         dateArray = value.split('.');
-        date = new Date(parseInt(dateArray[2], getMonthNumber(dateArray[1]), parseInt(dateArray[0])));
+        date = new Date(parseInt(dateArray[2]), getMonthNumber(dateArray[1]), parseInt(dateArray[0]));
         return date;
       case 'dd/MM/yyyy':
         dateArray = value.split('/');
@@ -244,7 +242,7 @@ var FooPicker = (function () {
         return date;
       case 'dd/MMM/yyyy':
         dateArray = value.split('/');
-        date = new Date(parseInt(dateArray[2], getMonthNumber(dateArray[1]), parseInt(dateArray[0])));
+        date = new Date(parseInt(dateArray[2]), getMonthNumber(dateArray[1]), parseInt(dateArray[0]));
         return date;
       case 'MM-dd-yyyy':
         dateArray = value.split('-');
@@ -283,8 +281,8 @@ var FooPicker = (function () {
         date = new Date(parseInt(dateArray[0]), getMonthNumber(dateArray[1]), parseInt(dateArray[2]));
         return date;
       default:
-        dateArray = value.split('/');
-        date = new Date(parseInt(dateArray[2]), parseInt(dateArray[1]) - 1, parseInt(dateArray[0]));
+        dateArray = value.split('-');
+        date = new Date(parseInt(dateArray[2]), getMonthNumber(dateArray[1]), parseInt(dateArray[0]));
         return date;
     }
   }
@@ -463,7 +461,8 @@ var FooPicker = (function () {
   }
 
   function getMonthNumber(month) {
-    return months.indexOf(month);
+    var formatted = month.charAt(0).toUpperCase() + month.substr(1, month.length - 1).toLowerCase();
+    return months.indexOf(formatted);
   }
 
   function getDaysInMonth(year, month) {
