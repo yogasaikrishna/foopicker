@@ -139,6 +139,10 @@ var FooPicker = (function () {
           _self.selectedYear = date.getFullYear();
           _self.selectedDate = format(_self, date.getDate(), date.getMonth() + 1, date.getFullYear());
         } else {
+          _self.selectedDate = null;
+          _self.selectedDay = null;
+          _self.selectedMonth = null;
+          _self.selectedYear = null;
           date = new Date();
         }
         Calendar.date = date;
@@ -416,7 +420,7 @@ var FooPicker = (function () {
               this.year() === instance.selectedYear) {
               el[count].className += ' foopicker__day--selected' + ' ' + disabled;
             } else {
-              if (day === this.today() - 1 && month === this.month() && year === this.year()) {
+              if (el[count].dataset.day === this.today() && month === this.month() && year === this.year()) {
                 dayClass = ' foopicker__day--today';
               } else {
                 dayClass = '';
