@@ -50,13 +50,14 @@ var FooPicker = (function () {
     _self.hidePicker = function(event) {
       setTimeout(function() {
         var pickerDiv, pickerField;
-        if (!_self.monthChange) {
+        if (!_self.monthChange && !_self.isPickerClicked) {
           _self.removeListeners(_id);
           pickerDiv = document.getElementById('foopicker-' + _id);
           if (pickerDiv) {
             pickerDiv.innerHTML = '';
           }
-        } else {
+          _self.isDateClicked = false;
+        } else if (!_self.isPickerClicked) {
           pickerField = document.getElementById(_self.options.id);
           if (pickerField) {
             pickerField.focus();
@@ -82,6 +83,8 @@ var FooPicker = (function () {
           pickerField.value = date;
         }
       }
+      _self.isPickerClicked = false;
+      _self.isDateClicked = true;
       _self.hidePicker();
     };
 
@@ -106,12 +109,16 @@ var FooPicker = (function () {
       if (className.indexOf('foopicker__arrow--next') !== -1) {
         positive = true;
       }
+      var month = positive ? _self.currentMonth + 1 : _self.currentMonth - 1;
+      _self.updateCalendar(month);
+    };
+
+    _self.updateCalendar = function(newMonth, newYear) {
       _self.monthChange = true;
       var day = _self.currentDate;
-      var month = positive ? _self.currentMonth + 1 : _self.currentMonth - 1;
-      var year = _self.currentYear;
-      _self.currentMonth = month;
-      Calendar.date = new Date(year, month , day);
+      var year = newYear || _self.currentYear;
+      _self.currentMonth = newMonth;
+      Calendar.date = new Date(year, newMonth , day);
       var pickerDiv = document.getElementById('foopicker-' + _id);
       if (pickerDiv) {
         var datepicker = pickerDiv.querySelector('.foopicker');
@@ -174,6 +181,7 @@ var FooPicker = (function () {
 
     function keyDownListener() {
       _self.monthChange = false;
+      _self.isPickerClicked = false;
       _self.hidePicker();
     }
 
@@ -327,6 +335,10 @@ var FooPicker = (function () {
       return this.date.getFullYear();
     },
 
+    getCurrentYear: function() {
+      return new Date().getFullYear();
+    },
+
     rowPadding: function() {
       var startWeekDay = getWeekDay(1, this.month(), this.year());
       return [6, 0, 1, 2, 3, 4, 5][startWeekDay];
@@ -336,9 +348,38 @@ var FooPicker = (function () {
     buildHeader: function() {
       return '<div class="foopicker__header">' +
         '<div class="foopicker__arrow foopicker__arrow--prev"></div>' +
-        '<div class="foopicker__month">' + getMonths(this.month()) +
-        '&nbsp;&nbsp;' + this.year() + '</div>' +
+        '<div class="foopicker__date">' + this.buildMonths() +
+        '&nbsp;&nbsp;' + this.buildYears() + '</div>' +
         '<div class="foopicker__arrow foopicker__arrow--next"></div></div>';
+    },
+
+    // Build months select
+    buildMonths: function() {
+      var elem = '<select class="foopicker__date--month">', month = this.month();
+      for (var i = 0; i < months.length; i++) {
+        elem += '<option value="' + i + '"';
+        if (i === month) {
+          elem += ' selected';
+        }
+        elem += '>' + months[i] + "</option>";
+      }
+      elem += '</select>';
+      return elem;
+    },
+
+    // Build years select
+    buildYears: function() {
+      var elem = '<select class="foopicker__date--year">', currentYear = this.getCurrentYear();
+      var year = this.year();
+      for (var i = year - 20; i <= currentYear; i++) {
+        elem += '<option value="' + i + '"';
+        if (i === year) {
+          elem += ' selected';
+        }
+        elem += '>' + i + '</option>';
+      }
+      elem += '</select>';
+      return elem;
     },
 
     // Build calendar body
@@ -381,6 +422,27 @@ var FooPicker = (function () {
         var nextBtn = pickerDiv.getElementsByClassName('foopicker__arrow--next')[0];
         addEvent(prevBtn, 'click', instance.changeMonth, false);
         addEvent(nextBtn, 'click', instance.changeMonth, false);
+
+        var monthSelect = pickerDiv.getElementsByClassName('foopicker__date--month')[0];
+        var yearSelect = pickerDiv.getElementsByClassName('foopicker__date--year')[0];
+        
+        // add event listener for month change
+        addEvent(monthSelect, 'change', function(event) {
+          instance.updateCalendar(event.target.value);
+        }, false);
+
+        // add event listener for year change
+        addEvent(yearSelect, 'change', function(event) {
+          instance.updateCalendar(instance.currentMonth, event.target.value);
+        }, false);
+
+        // add event listener to handle clicks anywhere on date picker
+        addEvent(pickerDiv, 'click', function(event) {
+          event.stopPropagation();
+          if (!instance.isDateClicked) {
+            instance.isPickerClicked = true;
+          }
+        }, false);
       }
 
       this.changeInstanceDate(instance);
@@ -397,6 +459,12 @@ var FooPicker = (function () {
           }
         }
       }
+
+      // Close the date picker if clicked anywhere outside the picker element
+      var htmlRoot = document.getElementsByTagName('html')[0];
+      addEvent(htmlRoot, 'click', function() {
+        instance.isPickerClicked = false;
+      }, false);
     },
 
     modifyDateClass: function(instance) {

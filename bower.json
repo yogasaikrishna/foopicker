@@ -4,7 +4,7 @@
 	"foopicker.js",
 	"./css/foopicker.css"
   ],
-  "version": "0.2.8",
+  "version": "0.3.0",
   "homepage": "https://github.com/yogasaikrishna/foopicker",
   "authors": [
     "Yogasaikrishna <yogasaikrishna@gmail.com>"

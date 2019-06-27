@@ -102,3 +102,12 @@
   font-weight: 600;
   text-transform: uppercase;
 }
+
+.foopicker__date--month,
+.foopicker__date--year {
+  background: none;
+  border: 0;
+  color: #666;
+  font-size: 13px;
+  height: 20px;
+}
