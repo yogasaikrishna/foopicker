@@ -53,6 +53,7 @@ var FooPicker = (function () {
         if (!_self.monthChange && !_self.isPickerClicked) {
           _self.removeListeners(_id);
           pickerDiv = document.getElementById('foopicker-' + _id);
+          pickerDiv.removeEventListener('click', self.handlePickerClick, false);
           if (pickerDiv) {
             pickerDiv.innerHTML = '';
           }
@@ -102,6 +103,9 @@ var FooPicker = (function () {
         }
       }
       document.removeEventListener('keydown', keyDownListener, false);
+
+      var htmlRoot = document.getElementsByTagName('html')[0];
+      htmlRoot.removeEventListener('click', _self.handleDocumentClick, false);
     };
 
     _self.changeMonth = function(event) {
@@ -123,6 +127,8 @@ var FooPicker = (function () {
       if (pickerDiv) {
         var datepicker = pickerDiv.querySelector('.foopicker');
         datepicker.innerHTML = Calendar.buildHeader() + Calendar.buildCalendar();
+        _self.isPickerClicked = false;
+        Calendar.removeListeners(_self);
         Calendar.addListeners(_self);
       }
     };
@@ -161,8 +167,32 @@ var FooPicker = (function () {
         pickerDiv.appendChild(fragment);
 
         Calendar.addListeners(_self);
+
+        // add event listener to handle clicks anywhere on date picker
+        addEvent(pickerDiv, 'click', _self.handlePickerClick, false);
       }
       document.addEventListener('keydown', keyDownListener, false);
+      
+      // Close the date picker if clicked anywhere outside the picker element
+      var htmlRoot = document.getElementsByTagName('html')[0];
+      addEvent(htmlRoot, 'click', _self.handleDocumentClick, false);
+    };
+
+    _self.handlePickerClick = function(event) {
+      event.stopPropagation();
+      if (!_self.isDateClicked) {
+        _self.isPickerClicked = true;
+      }   
+    };
+
+    _self.handleDocumentClick = function(event) {
+      var pickerField = document.getElementById(_self.options.id);
+      var pickerDiv = document.getElementById('foopicker-' + _self.options.id);
+      _self.isPickerClicked = false;
+      _self.monthChange = false;
+      if (event.target !== pickerField && event.target !== pickerDiv) {
+        _self.hidePicker();
+      }
     };
 
     _self.buildTemplate = function() {
@@ -181,7 +211,6 @@ var FooPicker = (function () {
 
     function keyDownListener() {
       _self.monthChange = false;
-      _self.isPickerClicked = false;
       _self.hidePicker();
     }
 
@@ -425,24 +454,12 @@ var FooPicker = (function () {
 
         var monthSelect = pickerDiv.getElementsByClassName('foopicker__date--month')[0];
         var yearSelect = pickerDiv.getElementsByClassName('foopicker__date--year')[0];
-        
+
         // add event listener for month change
-        addEvent(monthSelect, 'change', function(event) {
-          instance.updateCalendar(event.target.value);
-        }, false);
+        addEvent(monthSelect, 'change', this.handleMonthChange.bind(event, instance), false);
 
         // add event listener for year change
-        addEvent(yearSelect, 'change', function(event) {
-          instance.updateCalendar(instance.currentMonth, event.target.value);
-        }, false);
-
-        // add event listener to handle clicks anywhere on date picker
-        addEvent(pickerDiv, 'click', function(event) {
-          event.stopPropagation();
-          if (!instance.isDateClicked) {
-            instance.isPickerClicked = true;
-          }
-        }, false);
+        addEvent(yearSelect, 'change', this.handleYearChange.bind(event, instance), false);
       }
 
       this.changeInstanceDate(instance);
@@ -459,12 +476,26 @@ var FooPicker = (function () {
           }
         }
       }
+    },
 
-      // Close the date picker if clicked anywhere outside the picker element
-      var htmlRoot = document.getElementsByTagName('html')[0];
-      addEvent(htmlRoot, 'click', function() {
-        instance.isPickerClicked = false;
-      }, false);
+    handleMonthChange: function(instance, event) {
+      instance.updateCalendar(event.target.value);
+    },
+
+    handleYearChange: function(instance, event) {
+      instance.updateCalendar(instance.currentMonth, event.target.value);
+    },
+
+    removeListeners: function(instance) {
+      var id = instance.options.id;
+      var pickerDiv = document.getElementById('foopicker-' + id);
+      if (pickerDiv) {
+        var monthSelect = pickerDiv.getElementsByClassName('foopicker__date--month')[0];
+        var yearSelect = pickerDiv.getElementsByClassName('foopicker__date--year')[0];
+        
+        monthSelect.removeEventListener('change', this.handleMonthChange, false);
+        yearSelect.removeEventListener('change', this.handleYearChange, false);
+      }
     },
 
     modifyDateClass: function(instance) {
