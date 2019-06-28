@@ -82,6 +82,10 @@ var FooPicker = (function () {
         _self.selectedYear = parseInt(el.dataset.year);
         if (pickerField) {
           pickerField.value = date;
+          pickerField.focus();
+          setTimeout(function() {
+            pickerField.blur();
+          }, 100);
         }
       }
       _self.isPickerClicked = false;
