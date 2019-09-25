@@ -1,6 +1,6 @@
 {
   "name": "foopicker",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Pure JavaScript date picker",
   "main": "foopicker.js",
   "repository": {
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/yogasaikrishna/foopicker#readme",
   "devDependencies": {
     "browser-sync": "^2.10.0",
+    "eslint": "^6.4.0",
     "gulp": "^3.9.0",
     "gulp-minify-css": "^1.2.1",
     "gulp-sass": "^2.1.0",

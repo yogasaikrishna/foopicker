@@ -404,7 +404,7 @@ var FooPicker = (function () {
     buildYears: function() {
       var elem = '<select class="foopicker__date--year">', currentYear = this.getCurrentYear();
       var year = this.year();
-      for (var i = year - 20; i <= currentYear; i++) {
+      for (var i = year - 20; i <= currentYear + 5; i++) {
         elem += '<option value="' + i + '"';
         if (i === year) {
           elem += ' selected';
@@ -460,10 +460,10 @@ var FooPicker = (function () {
         var yearSelect = pickerDiv.getElementsByClassName('foopicker__date--year')[0];
 
         // add event listener for month change
-        addEvent(monthSelect, 'change', this.handleMonthChange.bind(event, instance), false);
+        addEvent(monthSelect, 'change', this.handleMonthChange.bind(null, instance), false);
 
         // add event listener for year change
-        addEvent(yearSelect, 'change', this.handleYearChange.bind(event, instance), false);
+        addEvent(yearSelect, 'change', this.handleYearChange.bind(null, instance), false);
       }
 
       this.changeInstanceDate(instance);
@@ -553,7 +553,7 @@ var FooPicker = (function () {
     var el = document.getElementById(picker.options.id);
     if (el) {
       addEvent(el, 'click', picker.showPicker, false);
-      addEvent(el, 'blur', picker.hidePicker, false);
+      // addEvent(el, 'blur', picker.hidePicker, false);
     }
   }
 
