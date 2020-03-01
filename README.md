@@ -5,7 +5,7 @@
 * Lightweight (6.2KB minified)
 * Zero dependencies
 
-![FooPicker Screenshot](https://imgur.com/1LUbsCa)
+![FooPicker Screenshot](https://raw.githubusercontent.com/yogasaikrishna/foopicker/master/Screenshot.png)
 
 ## Instructions
 
