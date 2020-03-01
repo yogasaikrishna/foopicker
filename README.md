@@ -5,14 +5,14 @@
 * Lightweight (6.2KB minified)
 * Zero dependencies
 
-![FooPicker Screenshot](http://www.yogasaikrishna.com/wp-content/uploads/2015/11/foopicker_screenshot.png)
+![FooPicker Screenshot](https://imgur.com/1LUbsCa)
 
 ## Instructions
 
 ### Bower
 
 ```
-bower install foopicker
+npm install foopicker
 ```
 
 ### Other
